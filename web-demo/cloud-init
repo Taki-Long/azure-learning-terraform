@@ -1,0 +1,23 @@
+## template: jinja
+#cloud-config
+bootcmd:
+  - INSTANCE_ID=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/vmId?api-version=2017-08-01&format=text")
+package_update: true
+packages:
+  - nginx
+write_files:
+  - path: /usr/share/nginx/html/index.html
+    permissions: 0744
+    owner: root
+    content: |
+      <!DOCTYPE html>
+      <html>
+          <head>
+              <title>Azure-Learning</title>
+          </head>
+          <body>
+              <p>{{ v1.instance_id }}</p>
+          </body>
+      </html>
+runcmd:
+  - [ systemctl, enable, nginx ]
