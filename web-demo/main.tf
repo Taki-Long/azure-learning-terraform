@@ -13,7 +13,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "azure-learning"
+  name     = "azure-learning-web-demo"
   location = "Korea Central"
 }
 
@@ -53,7 +53,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Standard_B1ls"
-  instances           = 1
+  instances           = var.instance_number
   admin_username      = "adminuser"
 
   admin_ssh_key {
@@ -93,7 +93,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 }
 
 data "template_file" "script" {
-  template = file("cloud-init")
+  template = file("cloud-init.yml")
 }
 
 data "template_cloudinit_config" "config" {
@@ -103,7 +103,7 @@ data "template_cloudinit_config" "config" {
   # Main cloud-config configuration file.
   part {
     filename     = "cloud-init"
-    content_type = "text/cloud-config"
+    content_type = "text/jinja2"
     content      = data.template_file.script.rendered
   }
 }
