@@ -13,8 +13,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "azure-learning-web-demo"
-  location = "Korea Central"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "vn" {
@@ -78,9 +78,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     primary = true
 
     ip_configuration {
-      name      = "internal"
-      primary   = true
-      subnet_id = azurerm_subnet.internal.id
+      name                                   = "internal"
+      primary                                = true
+      subnet_id                              = azurerm_subnet.internal.id
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.bpepool.id]
     }
 
@@ -127,15 +127,15 @@ resource "azurerm_lb" "lb" {
 }
 
 resource "azurerm_lb_backend_address_pool" "bpepool" {
- loadbalancer_id     = azurerm_lb.lb.id
- name                = "bpepool"
+  loadbalancer_id = azurerm_lb.lb.id
+  name            = "bpepool"
 }
 
 resource "azurerm_lb_probe" "probe" {
- resource_group_name = azurerm_resource_group.rg.name
- loadbalancer_id     = azurerm_lb.lb.id
- name                = "lb_probe"
- port                = 80
+  resource_group_name = azurerm_resource_group.rg.name
+  loadbalancer_id     = azurerm_lb.lb.id
+  name                = "lb_probe"
+  port                = 80
 }
 
 resource "azurerm_lb_rule" "rule" {
