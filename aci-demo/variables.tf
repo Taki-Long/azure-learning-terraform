@@ -5,10 +5,5 @@ variable "location" {
 
 variable "resource_group_name" {
   type    = string
-  default = "azure-learning-web-demo"
-}
-
-variable "instance_number" {
-  type    = number
-  default = 2
+  default = "azure-learning-aci-demo"
 }
